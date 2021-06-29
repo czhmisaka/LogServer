@@ -1,0 +1,8 @@
+*.db
+*.db-shm
+*.db-wal
+database
+test.*
+test
+
+__pycache__
