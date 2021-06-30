@@ -3,7 +3,6 @@ import socket
 from inspect import BlockFinder, isfunction
 from LogServer.util import Util
 
-
 # 节点信息模板
 nodeInfoTemplate = {
     'nodeId': '节点ID',
@@ -60,7 +59,7 @@ class LogStorageMain:
         self.logMap = {}
         self.nodeTemplate = nodeInfoTemplate
         self.mainServerName = mainServerName
-        self.mainLog = Util(path='test', mainServerName=mainServerName)
+        self.mainLog = Util(path='test', mainServerName=mainServerName,nodeServerName='mainServerName')
         self.traceIDBlockMap = {}
         self.traceIDBlockSign = 0
         self.traceIDBlockSize = 10 * 1000
@@ -79,11 +78,24 @@ class LogStorageMain:
     def __beatCheckProcess(self):
         pass
 
-    # 通过节点ID获取保存在主机的节点信息
-    def getNodeInfoByNodeId(self, nodeId):
-        for x in self.nodeMap:
-            if self.nodeMap[x]['nodeId'] == nodeId:
-                return self.nodeMap[x]
+    def saveLog(self, nodeName=False, data=False, type='info', traceId=False):
+        if not nodeName or not data:
+            return False
+        lp = self.getLogClassByNodeName(nodeName=nodeName)
+        lp.addNewRecordInTxtStorage(data='【' + str(traceId) + '】' + str(data),
+                                    type=type)
+        pass
+
+    # 通过节点Name或id获取保存在主机的节点信息
+    def getNodeInfoByNodeName(self, nodeName=False, nodeId=False):
+        if nodeId:
+            for x in self.nodeMap:
+                if self.nodeMap[x]['nodeId'] == nodeId:
+                    return self.nodeMap[x]
+        if nodeName:
+            for x in self.nodeMap:
+                if x == nodeName:
+                    return self.nodeMap[x]
         return False
 
     # 通过节点ID获取对应节点操作类
@@ -109,24 +121,23 @@ class LogStorageMain:
                     return False
                 else:
                     return id
-
         else:
             return ''
 
     # 获取traceID_Block(traceId 区块)
     def getTraceIdBlock(self, nodeName):
-        nodeInfo = self.getNodeInfoByNodeId(self.__getNodeIdByName(nodeName))
+        nodeInfo = self.getNodeInfoByNodeName(nodeName)
         if nodeInfo is False:
             return False
-        traceIdBlock = self.traceIDBlockTemplate
-        traceIdBlock.blockSize = self.traceIDBlockSize
-        traceIdBlock.nodeId = nodeInfo.nodeId
-        traceIdBlock.start = self.traceIDBlockSign
-        traceIdBlock.mainServer = self.mainServerName
-        traceIdBlock.mainServerPort = self.port
-        if not self.traceIDBlockMap[nodeInfo.nodeId]:
-            self.traceIDBlockMap[nodeInfo.nodeId] = []
-        self.traceIDBlockMap[nodeInfo.nodeId].append({
+        traceIdBlock = {}
+        traceIdBlock['blockSize'] = str(self.traceIDBlockSize)
+        traceIdBlock['nodeId'] = nodeInfo['nodeId']
+        traceIdBlock['start'] = str(self.traceIDBlockSign)
+        traceIdBlock['mainServer'] = self.mainServerName
+        traceIdBlock['mainServerPort'] = self.port
+        if nodeInfo['nodeId'] not in self.traceIDBlockMap.keys():
+            self.traceIDBlockMap[nodeInfo['nodeId']] = []
+        self.traceIDBlockMap[nodeInfo['nodeId']].append({
             'min':
             self.traceIDBlockSign,
             'max':
