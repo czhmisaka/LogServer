@@ -1,7 +1,7 @@
 import fastapi
 from fastapi.applications import FastAPI
 import uvicorn
-from Log import LS_main
+from LogServer import LogStorageMain
 
 
 if __name__=='__main__':

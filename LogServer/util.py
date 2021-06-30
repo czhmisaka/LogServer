@@ -1,7 +1,6 @@
-from Log.print import logPrint
 import sqlite3 as sql
 import os
-from Log import logPrint as lp
+from LogServer.print import logPrint 
 import logging
 import time
 '''

@@ -1,11 +1,8 @@
-from Log import mainServer, node, Util
-import sqlite3 as sq
-import time
 from enum import Enum, unique
-import os
-import path
 import socket
 from inspect import BlockFinder, isfunction
+from LogServer.util import Util
+
 
 # 节点信息模板
 nodeInfoTemplate = {
@@ -108,8 +105,8 @@ class LogStorageMain:
         if nodeName != '':
             id = hash(nodeName)
             while True:
-                if id in self.logList:
-                    id = id + 1
+                if id in self.logMap:
+                    return False
                 else:
                     return id
 
@@ -152,16 +149,19 @@ class LogStorageMain:
                   mainServerName=nodeInfo["mainServerName"],
                   nodeServerName=nodeInfo["nodeName"])
         self.logMap[nodeId] = lp
-        node = {
-            'nodeId': nodeId,
-            'nodeName': nodeInfo["nodeName"],
-            'nodeIP': nodeInfo["nodeIP"],
-            'nodePort': nodeInfo["nodePort"],
-            'mainServerName': nodeInfo["mainServerName"],
-            'mainServerIP': nodeInfo["mainServerIP"],
-            'mainServerPort': nodeInfo["mainServerPort"],
-            'tick': nodeInfo["tick"],
-        }
+        try:
+            node = {
+                'nodeId': nodeId,
+                'nodeName': nodeInfo["nodeName"],
+                'nodeIP': nodeInfo["nodeIP"],
+                'nodePort': nodeInfo["nodePort"],
+                'mainServerName': nodeInfo["mainServerName"],
+                'mainServerIP': nodeInfo["mainServerIP"],
+                'mainServerPort': nodeInfo["mainServerPort"],
+                'tick': nodeInfo["tick"],
+            }
+        except:
+            return False
         self.nodeMap[nodeInfo["nodeName"]] = node
         return True
 
