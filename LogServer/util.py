@@ -1,6 +1,6 @@
 import sqlite3 as sql
 import os
-from LogServer.print import logPrint 
+from LogServer.print import logPrint
 import logging
 import time
 '''
@@ -31,32 +31,36 @@ class Util():
         self.nodeServerName = nodeServerName
         self.sqlLogStorage = storageName
         self.txtLogStorage = storageName
-        self.txtPath = './'+path + '/Log/' + str(mainServerName)+'-'+str(nodeServerName)
+        self.txtPath = './' + path + '/Log/' + str(mainServerName) + '-' + str(
+            nodeServerName)
         self.mkdirFile(self.txtPath)
-        self.lp = logPrint(logPath=self.txtPath, mainName=self.mainServerName,nodeName=self.nodeServerName)
+        self.lp = logPrint(logPath=self.txtPath,
+                           mainName=self.mainServerName,
+                           nodeName=self.nodeServerName)
         pass
 
     # 添加一条新的记录
     def addNewRecordInTxtStorage(self, data, type='info'):
+        traceID = ''
         try:
             data = str(data)
             if type == 'info':
-                self.lp.info(data)
+                traceID = self.lp.info(data)
             elif type == 'err':
-                self.lp.err(data)
+                traceID = self.lp.err(data)
             elif type == 'warn':
-                self.lp.warn(data)
+                traceID = self.lp.warn(data)
             else:
-                self.lp.info(data)
+                traceID = self.lp.info(data)
         except:
             self.lp.err("AddNewRecode Error")
-        return True
+        return traceID
 
     # 通过traceID搜索 该模块下的记录
     def searchByTraceId(self, traceId=''):
         pass
 
-    def mkdirFile(self,path):
+    def mkdirFile(self, path):
         '''
         创建文件/多用于创建文件夹
         '''
@@ -68,9 +72,9 @@ class Util():
             else:
                 return False
         except:
-            self.lp.err("Error:"+str(time.time())+":mkdirFile:"+path) 
+            self.lp.err("Error:" + str(time.time()) + ":mkdirFile:" + path)
 
-    def __pathDeal(self,path):
+    def __pathDeal(self, path):
         '''
         下载路径处理
         '''

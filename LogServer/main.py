@@ -186,8 +186,6 @@ class LogStorageMain:
 '''
 节点
 '''
-
-
 class LogStorageNode:
     def __init__(self, mainServerName='root', nodeName='node', port='8020'):
         ''' 初始参数
@@ -206,6 +204,7 @@ class LogStorageNode:
         for x in self:
             if not isfunction(x):
                 config[x] = self[x]
+        return config
 
     # 从分配的区块中取出一个id
     def getTraceId(self):
@@ -221,7 +220,7 @@ class LogStorageNode:
         finally:
             s.close()
         return IPConfig
-
+    
 
 class NodeStatus(Enum):
     ReadyForLink = 0  # 节点上线，等待配置连接中

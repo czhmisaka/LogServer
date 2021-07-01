@@ -16,17 +16,8 @@ class logPrint:
         self.logFormat = self.logObj.Formatter(
             fmt='%(levelname)s-%(name)s【%(asctime)s】:%(message)s',
             datefmt='%Y-%m-%d %H:%M:%S')
-        self.log = self.logObj.getLogger(self.logClass)
-        self.Filehandler = self.logObj.FileHandler(filename=logPath + '/index.log', encoding="UTF-8")
-        self.Filehandler.setFormatter(self.logFormat)
-        self.log.addHandler(self.Filehandler)
-        self.log.setLevel(self.logObj.INFO)
-
-    # 配置文件地址
-    def baseConfig(self, logPath=""):
-        self.logObj.basicConfig(filemode='a',
-                                filename=logPath + '/index.log',
-                                level=self.logObj.INFO)
+        self.Filehandler = ''
+        self.log = self.__newFileHandler()
 
     # 各种打印
     def info(self, word):
@@ -37,6 +28,27 @@ class logPrint:
 
     def warn(self, word):
         self.log.warn(word)
+
+    # 创建新的写入机
+    def __newFileHandler(self, logPath=False):
+        if logPath == False:
+            logPath = self.logPath
+        else:
+            self.logPath = logPath
+        self.Filehandler = self.logObj.FileHandler(filename=logPath +
+                                                   '/index.log',
+                                                   encoding="UTF-8")
+        self.Filehandler.setFormatter(self.logFormat)
+        log = self.logObj.getLogger(self.logClass)
+        log.addHandler(self.Filehandler)
+        log.setLevel(self.logObj.INFO)
+        return log
+
+    # 设置新的分块文件记录
+    def checkBlock(self):
+        logPath = self.logPath
+        self.Filehandler = self.__newFileHandler(logPath=logPath)
+        return 0
 
     # 检查文件夹
     def __checkFile(self, path):
@@ -49,3 +61,4 @@ class logPrint:
                 return True
         except IOError:
             self.log.info('IOError in __checkFile[' + str(path) + ']')
+            return False
