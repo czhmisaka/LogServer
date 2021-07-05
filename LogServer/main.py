@@ -3,6 +3,8 @@ from os import name
 import socket
 from inspect import BlockFinder, isfunction
 from time import daylight, time
+
+from uvicorn.main import main
 from LogServer.util import Util
 
 # 节点信息模板
@@ -104,6 +106,13 @@ class LogStorageMain:
     # 启动心跳服务查看节点状态
     def __beatCheckProcess(self):
         pass
+
+    # 保存日志
+    def setLog(self, logs):
+        return self.saveLog(nodeName=logs['nodeName'],
+                            data=logs['data'],
+                            traceId=logs['traceId'],
+                            type=logs['type'])
 
     def saveLog(self, nodeName=False, data=False, type='info', traceId=False):
         if not data:
@@ -269,12 +278,26 @@ class LogStorageNode:
     def linkCheck(self):
         pass
 
+    # 设定主机信息
+    def setMainServerConfig(
+        self,
+        mainServerInfo={
+            'mainServerName': 'mainServer',
+            'mainServerIP': '30.117.24.206',
+            'mainServerPort': '8050'
+        }):
+        self.mainServerName = mainServerInfo['mainServerName']
+        self.mainServerInfo = mainServerInfo
+        pass
+
     # 构建一条日志
     def log(self, word='', type="info"):
         data = {
             'nodeName': self.nodeName,
             'data': word,
-            'traceId': self.getTraceId,
+            'traceId': self.getTraceId(),
+            'config': self.getConfig(),
+            'type': type
         }
         return data
 
@@ -300,7 +323,6 @@ class LogStorageNode:
         if nextTraceId > self.traceIdLimit or not self.traceIdBlockInfo:
             nextTraceId = self.__replaceTraceIdBlock()
         if nextTraceId == 0:
-            print('需要添加traceBlock')
             return 0
         self.traceID = nextTraceId
         return nextTraceId

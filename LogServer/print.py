@@ -14,7 +14,7 @@ class logPrint:
         self.logClass = mainName + '.' + nodeName
         self.logObj = logging
         self.logFormat = self.logObj.Formatter(
-            fmt='%(levelname)s-%(name)s【%(asctime)s】:%(message)s',
+            fmt='%(message)s - %(levelname)s - %(name)s【%(asctime)s】',
             datefmt='%Y-%m-%d %H:%M:%S')
         self.Filehandler = ''
         self.log = False
@@ -23,13 +23,15 @@ class logPrint:
 
     # 各种打印
     def info(self, word):
-        print(word,self.logClass)
+        print(word)
         self.log.info(word)
 
     def err(self, word):
+        print(word)
         self.log.error(word)
 
     def warn(self, word):
+        print(word)
         self.log.warn(word)
 
     # 创建新的写入机
