@@ -57,7 +57,7 @@ class Util():
         return traceID
 
     # 通过traceID搜索 该模块下的记录
-    def searchByTraceId(self, traceId=''):
+    def searchByTraceId(self, traceId='',nodeName=False):
         pass
 
     def mkdirFile(self, path):

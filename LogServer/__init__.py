@@ -6,6 +6,7 @@ __author__ = 'czh'
 
 from .main import LogStorageMain
 from .main import LogStorageNode
-from .node import NodeLogServer
+from .nodeServer import NodeLogServer
+from .mainServer import mainLogServer
 from .print import logPrint
 from .util import Util

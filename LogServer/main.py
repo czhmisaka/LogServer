@@ -79,9 +79,12 @@ class LogStorageMain:
         pass
 
     def saveLog(self, nodeName=False, data=False, type='info', traceId=False):
-        if not nodeName or not data:
+        if not data:
             return False
-        lp = self.getLogClassByNodeName(nodeName=nodeName)
+        if not nodeName:
+            lp = self.mainLog
+        else:
+            lp = self.getLogClassByNodeName(nodeName=nodeName)
         lp.addNewRecordInTxtStorage(data='【' + str(traceId) + '】' + str(data),
                                     type=type)
         pass
@@ -110,7 +113,7 @@ class LogStorageMain:
             nodeId = self.nodeMap[nodeName]['nodeId']
             return self.getLogClassByNodeId(nodeId)
         else:
-            return False
+            return self.mainLog
 
     # 使用节点名称获取节点ID
     def __getNodeIdByName(self, nodeName=''):
@@ -146,10 +149,6 @@ class LogStorageMain:
         self.traceIDBlockSign = self.traceIDBlockSign + self.traceIDBlockSize
         return traceIdBlock
 
-    # 默认创建/刷新节点列表 - 好像暂时不需要这个了
-    def initModuleList(self):
-        pass
-
     # 添加一个节点
     def addNode(self, nodeInfo):
         nodeId = self.__getNodeIdByName(nodeInfo["nodeId"])
@@ -179,7 +178,7 @@ class LogStorageMain:
     # 移除一个节点信息
     # 此处仍然会保留nodeId防止日志混写，但需要在Util中注销写入日志的服务
     def removeNode(self, nodeName, nodeId):
-
+        
         pass
 
 

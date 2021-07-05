@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
 app = FastAPI()
 
-main_logServer = LogStorageMain(mainServerName='mainServer',
+mainLogServer = LogStorageMain(mainServerName='mainServer',
                                 storageName='LogServer')
 
 
