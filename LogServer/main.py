@@ -1,6 +1,8 @@
 from enum import Enum, unique
+from os import name
 import socket
 from inspect import BlockFinder, isfunction
+from time import daylight, time
 from LogServer.util import Util
 
 # 节点信息模板
@@ -23,6 +25,8 @@ traceIdBlockTemplate = {
     'mainServer': '主机名称',
     'mainServerPort': '主服务器端口'
 }
+# 目前可用的log类型
+typeOfLog = ['info', 'err', 'warn']
 '''
 czh家庭服务器的日志模块
 主机
@@ -44,7 +48,7 @@ class LogStorageMain:
             logMap              : 日志服务 -
             nodeTemplate        : 节点数据模板
             mainServerName      : 主服务器名
-            mainLog             : 主服务器日志
+            mainLog             : 主服务器 节点名称
             traceIDBlockMap     : traceID区块管理map
             traceIDBlockSign    : traceID区块ID
             traceIDBlockSize    : traceID区块大小
@@ -59,12 +63,35 @@ class LogStorageMain:
         self.logMap = {}
         self.nodeTemplate = nodeInfoTemplate
         self.mainServerName = mainServerName
-        self.mainLog = Util(path='test', mainServerName=mainServerName,nodeServerName='mainServerName')
+        self.mainserverIP = self.getIPConifg()['ip']
+        self.mainLog = 'mainLogNode'
         self.traceIDBlockMap = {}
         self.traceIDBlockSign = 0
         self.traceIDBlockSize = 10 * 1000
         self.traceIDBlockTemplate = traceIdBlockTemplate
         pass
+
+    # 获取配置
+    def getConfig(self):
+        data = {
+            'mainServerName': self.mainServerName,
+            'mainServerIP': self.mainserverIP,
+            'mainServerPort': self.port
+        }
+        return data
+
+    # 添加主节点打印服务
+    # 这边需要用户手动操作防止日志重复写入的问题 （留个坑）
+    def addMainLogNode(self):
+        self.addNode({
+            'nodeName': self.mainLog,
+            'nodeIP': '127.0.0.1',
+            'nodePort': self.port,
+            'nodeId': '0',
+            'mainServerIP': '127.0.0.1',
+            'mainServerPort': self.port,
+            'tick': '10'
+        })
 
     # 启动日志模块守护线程
     def __helpProcess(self):
@@ -82,12 +109,16 @@ class LogStorageMain:
         if not data:
             return False
         if not nodeName:
-            lp = self.mainLog
+            lp = self.getLogClassByNodeName(nodeName=self.mainLog)
         else:
             lp = self.getLogClassByNodeName(nodeName=nodeName)
-        lp.addNewRecordInTxtStorage(data='【' + str(traceId) + '】' + str(data),
-                                    type=type)
-        pass
+        # print(nodeName)
+        if lp is not False:
+            return lp.addNewRecordInTxtStorage(data='【' + str(traceId) + '】' +
+                                               str(data),
+                                               type=type)
+        else:
+            return False
 
     # 通过节点Name或id获取保存在主机的节点信息
     def getNodeInfoByNodeName(self, nodeName=False, nodeId=False):
@@ -105,7 +136,7 @@ class LogStorageMain:
     def getLogClassByNodeId(self, nodeId):
         if nodeId in self.logMap:
             return self.logMap[nodeId]
-        return self.mainLog
+        return False
 
     # 通过节点名称获取对应节点操作类
     def getLogClassByNodeName(self, nodeName):
@@ -113,7 +144,7 @@ class LogStorageMain:
             nodeId = self.nodeMap[nodeName]['nodeId']
             return self.getLogClassByNodeId(nodeId)
         else:
-            return self.mainLog
+            return self.getLogClassByNodeName(self, self.mainLog)
 
     # 使用节点名称获取节点ID
     def __getNodeIdByName(self, nodeName=''):
@@ -133,7 +164,7 @@ class LogStorageMain:
         if nodeInfo is False:
             return False
         traceIdBlock = {}
-        traceIdBlock['blockSize'] = str(self.traceIDBlockSize)
+        traceIdBlock['blockSize'] = str(self.traceIDBlockSize - 1)
         traceIdBlock['nodeId'] = nodeInfo['nodeId']
         traceIdBlock['start'] = str(self.traceIDBlockSign)
         traceIdBlock['mainServer'] = self.mainServerName
@@ -151,7 +182,11 @@ class LogStorageMain:
 
     # 添加一个节点
     def addNode(self, nodeInfo):
-        nodeId = self.__getNodeIdByName(nodeInfo["nodeId"])
+        nodeId = ''
+        if 'nodeId' not in nodeInfo:
+            nodeId = self.__getNodeIdByName(nodeInfo["nodeName"])
+        else:
+            nodeId = nodeInfo["nodeId"]
         if nodeId == '':
             return False
         nodeInfo["mainServerName"] = self.mainServerName
@@ -175,42 +210,8 @@ class LogStorageMain:
         self.nodeMap[nodeInfo["nodeName"]] = node
         return True
 
-    # 移除一个节点信息
-    # 此处仍然会保留nodeId防止日志混写，但需要在Util中注销写入日志的服务
-    def removeNode(self, nodeName, nodeId):
-        
-        pass
-
-
-'''
-节点
-'''
-class LogStorageNode:
-    def __init__(self, mainServerName='root', nodeName='node', port='8020'):
-        ''' 初始参数
-            mainServerName      : 主机名
-            nodeName            : 当前节点名称
-            port                : 启动端口
-        初始参数'''
-        self.mainServerName = mainServerName
-        self.nodeName = nodeName
-        self.port = port
-        self.IPConfig = self.__getIPConifg()
-
-    # 获取节点配置
-    def getConfig(self):
-        config = {}
-        for x in self:
-            if not isfunction(x):
-                config[x] = self[x]
-        return config
-
-    # 从分配的区块中取出一个id
-    def getTraceId(self):
-        pass
-
     # 获取ip配置
-    def __getIPConifg(self):
+    def getIPConifg(self):
         IPConfig = {}
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -219,7 +220,125 @@ class LogStorageNode:
         finally:
             s.close()
         return IPConfig
-    
+
+    # 移除一个节点信息
+    # 此处仍然会保留nodeId防止日志混写，但需要在Util中注销写入日志的服务
+    def removeNode(self, nodeName, nodeId):
+
+        pass
+
+
+'''
+节点
+'''
+
+
+class LogStorageNode:
+    def __init__(self,
+                 mainServerName='mainServer',
+                 mainServerInfo={},
+                 nodeName='node',
+                 port='8020'):
+        ''' 初始参数
+            mainServerName      : 主机名
+            nodeName            : 当前节点名称
+            port                : 启动端口
+            IPConfig            : ip信息
+            traceIdBlockInfo    : 当前的traceId区块信息
+            PreTraceIdBlockList : 预备可用的traceId区块（预先申请）
+            traceID             : 当前可用的traceId
+            traceIdLimit        : 当前可用的traceId上限
+            tick                : 分钟验证频次
+        初始参数'''
+        self.mainServerName = mainServerName
+        self.mainServerInfo = {}
+        self.nodeName = nodeName
+        self.port = port
+        self.IPConfig = self.getIPConifg()
+        self.traceIdBlockInfo = {}
+        self.PreTraceIdBlockList = []
+        self.traceID = 0
+        self.traceIdLimit = 0
+        self.tick = 1
+
+    # 新建到主机的链接
+    def linkToMainServer(self):
+        pass
+
+    # 通信验证服务
+    def linkCheck(self):
+        pass
+
+    # 构建一条日志
+    def log(self, word='', type="info"):
+        data = {
+            'nodeName': self.nodeName,
+            'data': word,
+            'traceId': self.getTraceId,
+        }
+        return data
+
+    # 获取节点配置
+    def getConfig(self):
+        data = {
+            'nodeName': self.nodeName,
+            'nodeIP': self.IPConfig['ip'],
+            'nodePort': self.port,
+            'mainServerName': '',
+            'mainServerIP': '',
+            'mainServerPort': '',
+            'tick': self.tick
+        }
+        for x in ['mainServerName', 'mainServerPort', 'mainServerIP']:
+            if x in self.mainServerInfo:
+                data[x] = self.mainServerInfo[x]
+        return data
+
+    # 从分配的区块中取出一个id
+    def getTraceId(self):
+        nextTraceId = int(self.traceID) + 1
+        if nextTraceId > self.traceIdLimit or not self.traceIdBlockInfo:
+            nextTraceId = self.__replaceTraceIdBlock()
+        if nextTraceId == 0:
+            print('需要添加traceBlock')
+            return 0
+        self.traceID = nextTraceId
+        return nextTraceId
+
+    # 获取ip配置
+    def getIPConifg(self):
+        IPConfig = {}
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect(('8.8.8.8', 80))
+            IPConfig['ip'] = s.getsockname()[0]
+        finally:
+            s.close()
+        return IPConfig
+
+    # 获取一个traceIdBlock到列表中
+    def setTraceIdBlock(
+        self,
+        traceIdBlock={
+            'blockSize': '区块大小',
+            'nodeId': '分配的节点ID',
+            'start': '区块起点',
+            'mainServer': '主机名称',
+            'mainServerPort': '主服务器端口'
+        }):
+        self.PreTraceIdBlockList.append(traceIdBlock)
+
+    # 替换使用完的traceId区块
+    def __replaceTraceIdBlock(self):
+        if len(self.PreTraceIdBlockList) == 0:
+            return 0
+        else:
+            self.traceIdBlockInfo = self.PreTraceIdBlockList[0]
+            del self.PreTraceIdBlockList[0]
+            self.traceIdLimit = int(self.traceIdBlockInfo['blockSize']) + int(
+                self.traceIdBlockInfo['start'])
+            return self.traceIdBlockInfo['start']
+
 
 class NodeStatus(Enum):
     ReadyForLink = 0  # 节点上线，等待配置连接中

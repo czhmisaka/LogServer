@@ -36,8 +36,7 @@ class Util():
         self.mkdirFile(self.txtPath)
         self.lp = logPrint(logPath=self.txtPath,
                            mainName=self.mainServerName,
-                           nodeName=self.nodeServerName)
-        pass
+                           nodeName=self.nodeServerName)    
 
     # 添加一条新的记录
     def addNewRecordInTxtStorage(self, data, type='info'):

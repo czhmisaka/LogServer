@@ -17,10 +17,13 @@ class logPrint:
             fmt='%(levelname)s-%(name)s【%(asctime)s】:%(message)s',
             datefmt='%Y-%m-%d %H:%M:%S')
         self.Filehandler = ''
-        self.log = self.__newFileHandler()
+        self.log = False
+        if self.log is False:
+            self.log = self.__newFileHandler()
 
     # 各种打印
     def info(self, word):
+        print(word,self.logClass)
         self.log.info(word)
 
     def err(self, word):
@@ -35,7 +38,8 @@ class logPrint:
             logPath = self.logPath
         else:
             self.logPath = logPath
-        self.Filehandler = self.logObj.FileHandler(filename=logPath +
+        if self.Filehandler == '':
+            self.Filehandler = self.logObj.FileHandler(filename=logPath +
                                                    '/index.log',
                                                    encoding="UTF-8")
         self.Filehandler.setFormatter(self.logFormat)
