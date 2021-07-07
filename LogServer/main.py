@@ -2,6 +2,7 @@ from enum import Enum, unique
 from os import name
 import socket
 from inspect import BlockFinder, isfunction
+import psutil
 from time import daylight, time
 
 from uvicorn.main import main
@@ -184,7 +185,7 @@ class LogStorageMain:
             'min':
             self.traceIDBlockSign,
             'max':
-            self.traceIDBlockSize + self.traceIDBlockSign
+            self.traceIDBlockSize + self.traceIDBlockSign - 1
         })
         self.traceIDBlockSign = self.traceIDBlockSign + self.traceIDBlockSize
         return traceIdBlock

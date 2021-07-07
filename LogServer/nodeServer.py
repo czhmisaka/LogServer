@@ -22,7 +22,10 @@ class NodeLogServer:
         self.sqlStorageName = StorageName
         self.txtStorageName = StorageName
         self.status = 'init'
-        self.tickRange = 10 * 60
+        pass
+    
+    # 启动服务器
+    def startServer(self):
         pass
 
     # 正常日志
@@ -35,12 +38,4 @@ class NodeLogServer:
 
     # 警告日志
     def warn(self):
-        pass
-    
-    # 启动日志模块守护线程
-    def __helpProcess(self):
-        pass
-
-    # 启动日志查看服务器
-    def __serverProcess():
         pass
