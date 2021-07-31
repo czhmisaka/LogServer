@@ -1,24 +1,17 @@
+from LogServer.IOClass.logInfo import nodeInfo
 from enum import Enum, unique
 from os import name
 import socket
 from inspect import BlockFinder, isfunction
 import psutil
 from time import daylight, time
-
+from IOClass import *
 from uvicorn.main import main
 from LogServer.util import Util
 
+
 # 节点信息模板
-nodeInfoTemplate = {
-    'nodeId': '节点ID',
-    'nodeName': '节点名称',
-    'nodeIP': '节点IP',
-    'nodePort': '节点端口',
-    'mainServerName': '主机名称',
-    'mainServerIP': '主机IP',
-    'mainServerPort': '主机端口',
-    'tick': "访问间隔"
-}
+nodeInfoTemplate = nodeInfo
 
 # 节点traceIdBlock模板
 traceIdBlockTemplate = {
@@ -28,6 +21,7 @@ traceIdBlockTemplate = {
     'mainServer': '主机名称',
     'mainServerPort': '主服务器端口'
 }
+
 # 目前可用的log类型
 typeOfLog = ['info', 'err', 'warn']
 '''

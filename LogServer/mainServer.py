@@ -1,7 +1,7 @@
-import fastapi
 from fastapi.applications import FastAPI
 import uvicorn
 from LogServer.main import LogStorageMain
+from LogServer.IOClass import logInfo, saveLogReq
 
 
 if __name__ == '__main__':
@@ -19,6 +19,11 @@ app = FastAPI()
 mainLogServer = LogStorageMain(mainServerName='mainServer',
                                 storageName='LogServer')
 
+
+@app.post('/saveLog/')
+async def saveLog(saveLogReq:saveLogReq):
+    mainLogServer.saveLog(nodeName=saveLogReq.nodeInfo)
+    pass
 
 
 
