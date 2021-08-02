@@ -4,6 +4,7 @@ from __future__ import absolute_import
 __version__ = '0.0.1'
 __author__ = 'czh'
 
+from .IOClass import *
 from .main import LogStorageMain
 from .main import LogStorageNode
 from .nodeServer import NodeLogServer
