@@ -17,7 +17,8 @@ nodeInfoTemplate = {
     'mainServerName': '主机名称',
     'mainServerIP': '主机IP',
     'mainServerPort': '主机端口',
-    'tick': "访问间隔"
+    'tick': "访问间隔",
+    'nodeStatus':''
 }
 
 # 节点traceIdBlock模板
@@ -102,20 +103,22 @@ class LogStorageMain:
 
     # 启动日志查看服务器
     def __serverProcess(self):
+        
         pass
 
     # 启动心跳服务查看节点状态
-    def __beatCheckProcess(self):
-        pass
+    def __beatCheckProcess(self,nodeId):
+        nodeInfo = self.getNodeInfoByNodeName(nodeId=nodeId)
+        return nodeInfo
 
     # 保存日志
-    def setLog(self, logs):
+    def setLog(self, logs:object):
         return self.saveLog(nodeName=logs['nodeName'],
                             data=logs['data'],
                             traceId=logs['traceId'],
                             type=logs['type'])
 
-    def saveLog(self, nodeName=False, data=False, type='info', traceId=False):
+    def saveLog(self, nodeName:bool=False, data=False, type='info', traceId=False):
         if not data:
             return False
         if not nodeName:
@@ -277,6 +280,10 @@ class LogStorageNode:
 
     # 通信验证服务
     def linkCheck(self):
+        pass
+
+    def getNodeEnvStatus(self):
+        
         pass
 
     # 设定主机信息
