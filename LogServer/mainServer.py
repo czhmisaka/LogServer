@@ -26,4 +26,6 @@ async def saveLog(saveLogReq:saveLogReq):
     pass
 
 
-
+@app.post('/getTraceIdBlock')
+async def getTraceIdBlock(nodeInfo):
+    pass

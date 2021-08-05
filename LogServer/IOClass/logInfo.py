@@ -3,14 +3,6 @@ from pydantic import BaseModel
 from LogServer.main import typeOfLog
 
 
-# saveLog 行为接收类
-class saveLogReq(BaseModel):
-    nodeInfo: Optional[object] = None
-    traceId: Optional[str] = 'not traceId back'
-    logType: Optional[str] = typeOfLog[0]
-    logData: Optional[str] = None
-
-
 # nodeInfo 节点信息模板
 class nodeInfo(BaseModel):
     '''
@@ -34,4 +26,25 @@ class nodeInfo(BaseModel):
 
 # 节点traceIdBlock模板
 class traceIdBlock(BaseModel):
-    pass  
+    '''
+        'blockSize': '区块大小',
+        'nodeId': '分配的节点ID',
+        'start': '区块起点',
+        'mainServer': '主机名称',
+        'mainServerPort': '主服务器端口'
+    '''
+    blockSize: int = 10*1000,
+    nodeId: Optional[str] = '0.0.0.0',
+    start: int = 0,
+    mainServer: Optional[str] = '主机',
+    mainServerPort: Optional[str] = '0.0.0.0'
+    pass
+
+
+# saveLog 行为接收类
+class saveLogReq(BaseModel):
+    nodeInfo: nodeInfo 
+    traceId: Optional[str] = 'not traceId back'
+    logType: Optional[str] = typeOfLog[0]
+    logData: Optional[str] = None
+

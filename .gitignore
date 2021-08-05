@@ -2,8 +2,6 @@
 *.db-shm
 *.db-wal
 database
-test.*
-test
 build
 dist
 *.egg-info

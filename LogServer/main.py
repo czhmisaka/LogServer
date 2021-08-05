@@ -1,26 +1,12 @@
-from LogServer.IOClass.logInfo import nodeInfo
+from LogServer.IOClass import logInfo
 from enum import Enum, unique
 from os import name
 import socket
 from inspect import BlockFinder, isfunction
 import psutil
 from time import daylight, time
-from IOClass import *
 from uvicorn.main import main
 from LogServer.util import Util
-
-
-# 节点信息模板
-nodeInfoTemplate = nodeInfo
-
-# 节点traceIdBlock模板
-traceIdBlockTemplate = {
-    'blockSize': '区块大小',
-    'nodeId': '分配的节点ID',
-    'start': '区块起点',
-    'mainServer': '主机名称',
-    'mainServerPort': '主服务器端口'
-}
 
 # 目前可用的log类型
 typeOfLog = ['info', 'err', 'warn']
@@ -58,14 +44,14 @@ class LogStorageMain:
         self.cmdShow = False
         self.nodeMap = {}
         self.logMap = {}
-        self.nodeTemplate = nodeInfoTemplate
+        self.nodeTemplate = logInfo.nodeInfo
         self.mainServerName = mainServerName
         self.mainserverIP = self.getIPConifg()['ip']
         self.mainLog = 'mainLogNode'
         self.traceIDBlockMap = {}
         self.traceIDBlockSign = 0
         self.traceIDBlockSize = 10 * 1000
-        self.traceIDBlockTemplate = traceIdBlockTemplate
+        self.traceIDBlockTemplate = logInfo.traceIdBlock
         pass
 
     # 获取配置
@@ -96,22 +82,26 @@ class LogStorageMain:
 
     # 启动日志查看服务器
     def __serverProcess(self):
-        
+
         pass
 
     # 启动心跳服务查看节点状态
-    def __beatCheckProcess(self,nodeId):
+    def __beatCheckProcess(self, nodeId):
         nodeInfo = self.getNodeInfoByNodeName(nodeId=nodeId)
         return nodeInfo
 
     # 保存日志
-    def setLog(self, logs:object):
+    def setLog(self, logs: object):
         return self.saveLog(nodeName=logs['nodeName'],
                             data=logs['data'],
                             traceId=logs['traceId'],
                             type=logs['type'])
 
-    def saveLog(self, nodeName:bool=False, data=False, type='info', traceId=False):
+    def saveLog(self,
+                nodeName: bool = False,
+                data=False,
+                type='info',
+                traceId=False):
         if not data:
             return False
         if not nodeName:
@@ -169,12 +159,12 @@ class LogStorageMain:
         nodeInfo = self.getNodeInfoByNodeName(nodeName)
         if nodeInfo is False:
             return False
-        traceIdBlock = {}
-        traceIdBlock['blockSize'] = str(self.traceIDBlockSize - 1)
-        traceIdBlock['nodeId'] = nodeInfo['nodeId']
-        traceIdBlock['start'] = str(self.traceIDBlockSign)
-        traceIdBlock['mainServer'] = self.mainServerName
-        traceIdBlock['mainServerPort'] = self.port
+        traceIdBlock = logInfo.traceIdBlock()
+        traceIdBlock.blockSize = str(self.traceIDBlockSize - 1)
+        traceIdBlock.nodeId = nodeInfo['nodeId']
+        traceIdBlock.start = str(self.traceIDBlockSign)
+        traceIdBlock.mainServer = self.mainServerName
+        traceIdBlock.mainServerPort = self.port
         if nodeInfo['nodeId'] not in self.traceIDBlockMap.keys():
             self.traceIDBlockMap[nodeInfo['nodeId']] = []
         self.traceIDBlockMap[nodeInfo['nodeId']].append({
@@ -276,7 +266,7 @@ class LogStorageNode:
         pass
 
     def getNodeEnvStatus(self):
-        
+
         pass
 
     # 设定主机信息
@@ -340,15 +330,7 @@ class LogStorageNode:
         return IPConfig
 
     # 获取一个traceIdBlock到列表中
-    def setTraceIdBlock(
-        self,
-        traceIdBlock={
-            'blockSize': '区块大小',
-            'nodeId': '分配的节点ID',
-            'start': '区块起点',
-            'mainServer': '主机名称',
-            'mainServerPort': '主服务器端口'
-        }):
+    def setTraceIdBlock(self, traceIdBlock):
         self.PreTraceIdBlockList.append(traceIdBlock)
 
     # 替换使用完的traceId区块
@@ -358,9 +340,9 @@ class LogStorageNode:
         else:
             self.traceIdBlockInfo = self.PreTraceIdBlockList[0]
             del self.PreTraceIdBlockList[0]
-            self.traceIdLimit = int(self.traceIdBlockInfo['blockSize']) + int(
-                self.traceIdBlockInfo['start'])
-            return self.traceIdBlockInfo['start']
+            self.traceIdLimit = int(self.traceIdBlockInfo.blockSize) + int(
+                self.traceIdBlockInfo.start)
+            return self.traceIdBlockInfo.start
 
 
 class NodeStatus(Enum):
