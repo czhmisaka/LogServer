@@ -1,7 +1,14 @@
+'''
+Author: czh
+Date: 2021-08-02 10:14:54
+'''
 from fastapi.applications import FastAPI
 import uvicorn
 from LogServer.main import LogStorageMain
-from LogServer.IOClass import logInfo, saveLogReq
+from LogServer.IOClass.logInfo import saveLogReq
+from LogServer.IOClass.logInfo import traceIdBlock
+from LogServer.IOClass.logInfo import nodeInfo
+import LogServer.IOClass.BlockInfo
 
 
 if __name__ == '__main__':
@@ -20,15 +27,20 @@ mainLogServer = LogStorageMain(mainServerName='mainServer',
 
 
 @app.post('/saveLog/')
-async def saveLog(saveLogReq:saveLogReq):
+async def saveLog(saveLogReq:saveLog):
     mainLogServer.saveLog(nodeName=saveLogReq.nodeInfo)
     pass
 
 
 @app.post('/getTraceIdBlock')
-async def getTraceIdBlock(nodeInfo):
+async def getTraceIdBlock(BlockInfo:blockInfo):
     pass
 
 @app.post('/searchNodeList')
 async def searchNodeList():
     pass
+
+class mainServer:
+    def __init__(args):
+        pass
+        
