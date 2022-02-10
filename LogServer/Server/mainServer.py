@@ -4,6 +4,8 @@ Date: 2021-08-02 10:14:54
 '''
 from fastapi.applications import FastAPI
 import uvicorn
+import sys
+sys.path.append("..")
 from LogServer.main import LogStorageMain
 from LogServer.IOClass.logInfo import saveLogReq as SaveLogReq
 from LogServer.IOClass.logInfo import traceIdBlock
@@ -39,6 +41,10 @@ async def getTraceIdBlock(blockInfo:BlockInfo):
 @app.post('/searchNodeList')
 async def searchNodeList():
     pass
+
+@app.get('/')
+async def getIndex():
+    return {}
 
 class mainServer:
     def __init__(args):

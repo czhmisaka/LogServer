@@ -1,3 +1,9 @@
+'''
+Date: 2022-02-10 10:23:16
+LastEditors: CZH
+LastEditTime: 2022-02-10 12:38:17
+FilePath: /LogServer/LogServer/__init__.py
+'''
 from __future__ import absolute_import
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
@@ -7,7 +13,5 @@ __author__ = 'czh'
 from .IOClass import *
 from .main import LogStorageMain
 from .main import LogStorageNode
-from .nodeServer import NodeLogServer
-from .mainServer import mainLogServer
 from .print import logPrint
 from .util import Util
