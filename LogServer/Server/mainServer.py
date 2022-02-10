@@ -2,15 +2,18 @@
 Author: czh
 Date: 2021-08-02 10:14:54
 '''
+from SQLServerController import sqlTable
+from LogServer.IOClass import BlockInfo
+from LogServer.IOClass.logInfo import nodeInfo
+from LogServer.IOClass.logInfo import traceIdBlock
+from LogServer.IOClass.logInfo import saveLogReq as SaveLogReq
+from LogServer.main import LogStorageMain
+from hashlib import new
 from fastapi.applications import FastAPI
+from sqlalchemy import VARCHAR
 import uvicorn
 import sys
 sys.path.append("..")
-from LogServer.main import LogStorageMain
-from LogServer.IOClass.logInfo import saveLogReq as SaveLogReq
-from LogServer.IOClass.logInfo import traceIdBlock
-from LogServer.IOClass.logInfo import nodeInfo
-from LogServer.IOClass import BlockInfo
 
 
 if __name__ == '__main__':
@@ -25,28 +28,38 @@ if __name__ == '__main__':
 
 app = FastAPI()
 mainLogServer = LogStorageMain(mainServerName='mainServer',
-                                storageName='LogServer')
+                               storageName='LogServer')
 
 
 @app.post('/saveLog/')
-async def saveLog(saveLogReq:SaveLogReq):
+async def saveLog(saveLogReq: SaveLogReq):
     mainLogServer.saveLog(nodeName=saveLogReq.nodeInfo)
     pass
 
 
 @app.post('/getTraceIdBlock')
-async def getTraceIdBlock(blockInfo:BlockInfo):
+async def getTraceIdBlock(blockInfo: BlockInfo):
     pass
+
 
 @app.post('/searchNodeList')
 async def searchNodeList():
     pass
 
+
+@app.get('/createTable')
+async def createTable():
+    sql = sqlTable()
+    fuck = sql.createTable(tableName='newTable', typeMap={
+                    'name': {'type': 'varchar(20)'}})
+    return fuck
+
+
 @app.get('/')
 async def getIndex():
     return {}
 
+
 class mainServer:
     def __init__(args):
         pass
-        
