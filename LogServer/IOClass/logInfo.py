@@ -1,3 +1,10 @@
+'''
+Date: 2022-02-10 10:23:16
+LastEditors: CZH
+LastEditTime: 2022-02-11 09:58:24
+FilePath: /LogServer/LogServer/IOClass/logInfo.py
+'''
+from tokenize import Double
 from typing import Optional
 from pydantic import BaseModel
 from LogServer.main import typeOfLog
@@ -33,10 +40,10 @@ class traceIdBlock(BaseModel):
         'mainServer': '主机名称',
         'mainServerPort': '主服务器端口'
     '''
-    blockSize: int = 10*1000,
-    nodeId: Optional[str] = '0.0.0.0',
-    start: int = 0,
-    mainServer: Optional[str] = '主机',
+    blockSize: int = 10000
+    nodeId: Optional[str] = '0.0.0.0'
+    start: int = 0
+    mainServer: Optional[str] = '主机'
     mainServerPort: Optional[str] = '0.0.0.0'
     pass
 

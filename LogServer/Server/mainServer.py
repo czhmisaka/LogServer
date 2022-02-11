@@ -2,18 +2,19 @@
 Author: czh
 Date: 2021-08-02 10:14:54
 '''
+
+import sys
+sys.path.append("..")
+sys.path.append("../..")
+sys.path.append("../../..")
 from SQLServerController import sqlTable
 from LogServer.IOClass import BlockInfo
 from LogServer.IOClass.logInfo import nodeInfo
 from LogServer.IOClass.logInfo import traceIdBlock
 from LogServer.IOClass.logInfo import saveLogReq as SaveLogReq
 from LogServer.main import LogStorageMain
-from hashlib import new
 from fastapi.applications import FastAPI
-from sqlalchemy import VARCHAR
 import uvicorn
-import sys
-sys.path.append("..")
 
 
 if __name__ == '__main__':
@@ -50,9 +51,9 @@ async def searchNodeList():
 @app.get('/createTable')
 async def createTable():
     sql = sqlTable()
-    fuck = sql.createTable(tableName='newTable', typeMap={
+    sql.createTable(tableName='newTable', typeMap={
                     'name': {'type': 'varchar(20)'}})
-    return fuck
+    return 'success'
 
 
 @app.get('/')

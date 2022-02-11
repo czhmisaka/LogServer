@@ -3,7 +3,6 @@ from enum import Enum, unique
 from os import name
 import socket
 from inspect import BlockFinder, isfunction
-import psutil
 from time import daylight, time
 from uvicorn.main import main
 from LogServer.util import Util
