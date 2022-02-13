@@ -8,10 +8,10 @@ sys.path.append("..")
 sys.path.append("../..")
 sys.path.append("../../..")
 from SQLServerController import sqlTable
-from LogServer.IOClass import BlockInfo
-from LogServer.IOClass.logInfo import nodeInfo
-from LogServer.IOClass.logInfo import traceIdBlock
-from LogServer.IOClass.logInfo import saveLogReq as SaveLogReq
+from LogServer.RequestModel.IOClass import BlockInfo
+from LogServer.RequestModel.IOClass.logInfo import nodeInfo
+from LogServer.RequestModel.IOClass.logInfo import traceIdBlock
+from LogServer.RequestModel.IOClass.logInfo import saveLogReq as SaveLogReq
 from LogServer.main import LogStorageMain
 from fastapi.applications import FastAPI
 import uvicorn

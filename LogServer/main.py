@@ -1,4 +1,4 @@
-from LogServer.IOClass import logInfo
+from LogServer.RequestModel.IOClass import logInfo
 from enum import Enum, unique
 from os import name
 import socket

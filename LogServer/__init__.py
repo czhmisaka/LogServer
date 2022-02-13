@@ -1,7 +1,7 @@
 '''
 Date: 2022-02-10 10:23:16
 LastEditors: CZH
-LastEditTime: 2022-02-11 09:50:59
+LastEditTime: 2022-02-13 15:09:56
 FilePath: /LogServer/LogServer/__init__.py
 '''
 from __future__ import absolute_import
@@ -10,7 +10,7 @@ from __future__ import absolute_import
 __version__ = '0.0.1'
 __author__ = 'czh'
 
-from .IOClass import *
+from .RequestModel.IOClass import *
 from .main import LogStorageMain
 from .main import LogStorageNode
 from .print import logPrint
