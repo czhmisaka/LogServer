@@ -31,6 +31,11 @@ app = FastAPI()
 mainLogServer = LogStorageMain(mainServerName='mainServer',
                                storageName='LogServer')
 
+'''初始化必要数据库'''
+sql = sqlTable()
+sql.createTable("Node",{})
+
+
 
 @app.post('/saveLog/')
 async def saveLog(saveLogReq: SaveLogReq):
@@ -48,12 +53,12 @@ async def searchNodeList():
     pass
 
 
-@app.get('/createTable')
-async def createTable():
-    sql = sqlTable()
-    sql.createTable(tableName='newTable', typeMap={
-                    'name': {'type': 'varchar(20)'}})
-    return 'success'
+# @app.get('/createTable')
+# async def createTable():
+#     sql = sqlTable()
+#     sql.createTable(tableName='newTable', typeMap={
+#                     'name': {'type': 'varchar(20)'}})
+#     return 'success'
 
 
 @app.get('/')

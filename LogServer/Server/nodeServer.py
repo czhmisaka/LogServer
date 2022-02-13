@@ -1,14 +1,10 @@
+#coding=utf-8
 import logging as log
 import time
 from enum import Enum, unique
 import os
-import path
 from LogServer import *
 
-'''
-czh家庭服务器的日志模块
-分布式节点从机
-'''
 
 class NodeLogServer:
     def __init__(self, StorageName="LogStorage"):
