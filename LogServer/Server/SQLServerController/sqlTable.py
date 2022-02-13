@@ -1,8 +1,8 @@
 '''
 Date: 2022-02-10 15:05:07
-LastEditors: Please set LastEditors
-LastEditTime: 2022-02-10 23:04:27
-FilePath: \LogServer\LogServer\Server\SQLServerController\sqlTable.py
+LastEditors: CZH
+LastEditTime: 2022-02-13 15:07:09
+FilePath: /LogServer/LogServer/Server/SQLServerController/sqlTable.py
 '''
 
 
@@ -22,9 +22,18 @@ class sqlTable:
 
     def _execute(self, sql):
         self.cursor.execute(sql)
+        return self.cursor
 
+    '''
+    name: createTable
+    description: 创建表格
+    authors: CZH
+    Date: 2022-02-11 11:06:46
+    param {*} self
+    param {*} tableName
+    param {*} typeMap
+    '''
     def createTable(self, tableName, typeMap):
-        # try:
         if not tableName:
             print('表格名称不得为空')
         self.cursor.execute("drop table if exists "+tableName)
@@ -35,6 +44,11 @@ class sqlTable:
                 sql = sql + " " + typeMap[x]['mark']
             sql = sql
         sql += ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
-        self._execute(sql)
-        # except Exception:
-        #     print('createTable 失败')
+        return self._execute(sql)
+    
+    
+class SqlCodeMaker:
+    def __init__(self,tableName):
+        self.tableName = tableName
+        
+    
