@@ -4,10 +4,10 @@ LastEditors: CZH
 LastEditTime: 2022-02-11 09:58:24
 FilePath: /LogServer/LogServer/IOClass/logInfo.py
 '''
+from json import JSONEncoder
 from tokenize import Double
 from typing import Optional
 from pydantic import BaseModel
-from LogServer.main import typeOfLog
 
 
 # nodeInfo 节点信息模板
@@ -25,11 +25,11 @@ class nodeInfo(BaseModel):
     nodeId: Optional[str] = None
     nodeName: Optional[str] = None
     nodeIp: Optional[str] = '0.0.0.0'
-    nodePort: int
+    nodePort: Optional[int] = 0
     mainServerName: Optional[str] = None
     mainServerIP: Optional[str] = None
-    mainServerPort: int
-    tick:int
+    mainServerPort: Optional[int] = 0
+    tick:Optional[int] = 1
 
 # 节点traceIdBlock模板
 class traceIdBlock(BaseModel):
@@ -52,6 +52,13 @@ class traceIdBlock(BaseModel):
 class saveLogReq(BaseModel):
     nodeInfo: nodeInfo 
     traceId: Optional[str] = 'not traceId back'
-    logType: Optional[str] = typeOfLog[0]
+    logType: Optional[str]
     logData: Optional[str] = None
 
+
+
+
+info1 = nodeInfo()
+for x in dir(info1):
+    print(x)
+print(JSONEncoder(info1))

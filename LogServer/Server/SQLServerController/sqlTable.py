@@ -11,9 +11,9 @@ import pymysql
 
 
 class sqlTable:
-    def __init__(self):
+    def __init__(self,host = "120.77.144.232",user = 'logServer',password='DfhMztCE5NkC867T',database = 'logServer'):
         self.DB = pymysql.connect(
-            host='120.77.144.232', user='logServer', password='DfhMztCE5NkC867T', database='logServer')
+            host=host, user=user, password=password, database=database)
         self.cursor = self.DB.cursor()
         pass
 
