@@ -33,7 +33,10 @@ mainLogServer = LogStorageMain(mainServerName='mainServer',
 
 '''初始化必要数据库'''
 sql = sqlTable()
-sql.createTable("Node",{})
+sql.createTable("Node",{
+    'nodeInfo': {'type': 'varchar(100)'}
+    
+})
 
 
 
