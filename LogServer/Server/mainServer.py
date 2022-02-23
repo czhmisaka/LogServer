@@ -16,6 +16,7 @@ from LogServer.RequestModel.IOClass.logInfo import traceIdBlock
 from LogServer.RequestModel.IOClass.logInfo import saveLogReq as SaveLogReq
 from LogServer.main import LogStorageMain
 from fastapi.applications import FastAPI
+from LogServer.Util import sqlTableCellMaker
 import uvicorn
 
 
@@ -36,7 +37,9 @@ mainLogServer = LogStorageMain(mainServerName='mainServer',
 '''初始化必要数据库'''
 sql = sqlTable()
 sql.createTable("Node",{
-    'name':{'type':'VARCHAR(20)'},
+    "name":sqlTableCellMaker('maxString'),
+    "ip":sqlTableCellMaker("string"),
+
 })
 
 
