@@ -4,6 +4,8 @@ Date: 2021-08-02 10:14:54
 '''
 
 import sys
+
+from sqlalchemy import VARCHAR
 sys.path.append("..")
 sys.path.append("../..")
 sys.path.append("../../..")
@@ -33,7 +35,9 @@ mainLogServer = LogStorageMain(mainServerName='mainServer',
 
 '''初始化必要数据库'''
 sql = sqlTable()
-sql.createTable("Node",{})
+sql.createTable("Node",{
+    'name':{'type':'VARCHAR(20)'},
+})
 
 
 

@@ -1,8 +1,8 @@
 '''
 Date: 2022-02-10 10:23:16
-LastEditors: CZH
-LastEditTime: 2022-02-11 09:58:24
-FilePath: /LogServer/LogServer/IOClass/logInfo.py
+LastEditors: Please set LastEditors
+LastEditTime: 2022-02-19 04:21:27
+FilePath: \LogServer\LogServer\RequestModel\IOClass\logInfo.py
 '''
 from json import JSONEncoder
 from tokenize import Double
@@ -58,7 +58,7 @@ class saveLogReq(BaseModel):
 
 
 
-info1 = nodeInfo()
-for x in dir(info1):
-    print(x)
-print(JSONEncoder(info1))
+# info1 = nodeInfo()
+# for x in dir(info1):
+#     print(x)
+# print(JSONEncoder(info1))
