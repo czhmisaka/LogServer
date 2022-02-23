@@ -6,7 +6,8 @@ Date: 2021-08-02 10:14:54
 import sys
 
 from sqlalchemy import VARCHAR
-from LogServer.Util.util import getPropertyList
+from LogServer.RequestModel.BaseModel import Request
+from LogServer.Util.util import getPropertyList, typeof
 sys.path.append("..")
 sys.path.append("../..")
 sys.path.append("../../..")
@@ -15,11 +16,12 @@ from LogServer.RequestModel.IOClass import BlockInfo
 from LogServer.RequestModel.IOClass.logInfo import nodeInfo
 from LogServer.RequestModel.IOClass.logInfo import traceIdBlock
 from LogServer.RequestModel.IOClass.logInfo import saveLogReq as SaveLogReq
-from LogServer.main import LogStorageMain
+from LogServer.main import LogStorageMain, LogStorageNode
 from fastapi.applications import FastAPI
 from LogServer.Util import sqlTableCellMaker
 import uvicorn
 
+Req = Request()
 
 if __name__ == '__main__':
     uvicorn.run(app='mainServer:app',
@@ -38,9 +40,10 @@ if __name__ == '__main__':
 
 app = FastAPI()
 mainLogServer = LogStorageMain(mainServerName='mainServer',
-                               storageName='LogServer')
+                               storageName='LogServer',
+                               port='3000')
 
-
+NodeServer = LogStorageNode(nodeName='node1', port='8080')
 
 @app.post('/saveLog/')
 async def saveLog(saveLogReq: SaveLogReq):
@@ -50,16 +53,18 @@ async def saveLog(saveLogReq: SaveLogReq):
 
 @app.post('/getTraceIdBlock')
 async def getTraceIdBlock(blockInfo: BlockInfo):
-    pass
+    NodeServer.setTraceIdBlock(BlockInfo)
+    return Req.success('获取区块成功')
 
 
 @app.post('/searchNodeList')
 async def searchNodeList():
     pass
 
-@app.get('/')
+@app.get('/getConfig')
 async def getIndex():
-    return {}
+    return Req.success(mainLogServer.getConfig())
+    
 class mainServer:
     def __init__(args):
         pass

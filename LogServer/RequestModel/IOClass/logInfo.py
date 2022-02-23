@@ -1,7 +1,7 @@
 '''
 Date: 2022-02-10 10:23:16
 LastEditors: Please set LastEditors
-LastEditTime: 2022-02-23 21:41:55
+LastEditTime: 2022-02-23 22:11:29
 FilePath: \LogServer\LogServer\RequestModel\IOClass\logInfo.py
 '''
 from json import JSONEncoder
@@ -58,7 +58,7 @@ class saveLogReq(BaseModel):
     logData: Optional[str] = None
 
 
-# info1 = nodeInfo()
-# for x in dir(info1):
-#     print(x)
-# print(JSONEncoder(info1))
+
+class logInfo(BaseModel):
+    word:Optional[str] = '一条空日志'
+    logType:Optional[str] = 'info'
