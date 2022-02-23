@@ -1,8 +1,8 @@
 '''
 Date: 2022-02-10 15:05:07
-LastEditors: CZH
-LastEditTime: 2022-02-13 15:07:09
-FilePath: /LogServer/LogServer/Server/SQLServerController/sqlTable.py
+LastEditors: Please set LastEditors
+LastEditTime: 2022-02-23 21:37:54
+FilePath: \LogServer\LogServer\Server\SQLServerController\sqlTable.py
 '''
 
 
@@ -38,12 +38,15 @@ class sqlTable:
             print('表格名称不得为空')
         self.cursor.execute("drop table if exists "+tableName)
         sql = "create table "+tableName+"("
+        if 'id' not in typeMap:
+            sql +=  'id INT UNSIGNED AUTO_INCREMENT,'
         for x in typeMap:
             sql = sql + " " + x + " " + typeMap[x]['type']
             if 'mark' in typeMap[x]:
                 sql = sql + " " + typeMap[x]['mark']
-            sql = sql
-        sql += ') ENGINE=InnoDB DEFAULT CHARSET=utf8'
+            sql = sql + ','
+        sql += 'PRIMARY KEY ( `id` )) ENGINE=InnoDB DEFAULT CHARSET=utf8'
+        print(sql)
         return self._execute(sql)
     
     

@@ -6,6 +6,7 @@ Date: 2021-08-02 10:14:54
 import sys
 
 from sqlalchemy import VARCHAR
+from LogServer.Util.util import getPropertyList
 sys.path.append("..")
 sys.path.append("../..")
 sys.path.append("../../..")
@@ -26,6 +27,11 @@ if __name__ == '__main__':
                 port=3000,
                 reload=True,
                 debug=True)
+    '''初始化必要数据库'''
+    sql = sqlTable()
+    sql.createTable("Node",getPropertyList(LogStorageMain))
+    sql.createTable("TraceIdBlock",getPropertyList(traceIdBlock))
+
 '''
 主机服务
 '''
@@ -33,14 +39,6 @@ if __name__ == '__main__':
 app = FastAPI()
 mainLogServer = LogStorageMain(mainServerName='mainServer',
                                storageName='LogServer')
-
-'''初始化必要数据库'''
-sql = sqlTable()
-sql.createTable("Node",{
-    "name":sqlTableCellMaker('maxString'),
-    "ip":sqlTableCellMaker("string"),
-
-})
 
 
 
@@ -59,20 +57,9 @@ async def getTraceIdBlock(blockInfo: BlockInfo):
 async def searchNodeList():
     pass
 
-
-# @app.get('/createTable')
-# async def createTable():
-#     sql = sqlTable()
-#     sql.createTable(tableName='newTable', typeMap={
-#                     'name': {'type': 'varchar(20)'}})
-#     return 'success'
-
-
 @app.get('/')
 async def getIndex():
     return {}
-
-
 class mainServer:
     def __init__(args):
         pass

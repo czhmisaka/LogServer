@@ -30,6 +30,7 @@ class LogStorageMain:
             logMap              : 日志服务 -
             nodeTemplate        : 节点数据模板
             mainServerName      : 主服务器名
+            mainserverIP        : 主服务器ip
             mainLog             : 主服务器 节点名称
             traceIDBlockMap     : traceID区块管理map
             traceIDBlockSign    : traceID区块ID
