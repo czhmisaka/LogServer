@@ -1,8 +1,8 @@
 '''
 Date: 2022-02-13 16:12:11
-LastEditors: CZH
-LastEditTime: 2022-02-13 17:35:27
-FilePath: /LogServer/LogServer/RequestModel/BaseModel.py
+LastEditors: Please set LastEditors
+LastEditTime: 2022-02-23 22:29:25
+FilePath: \LogServer\LogServer\RequestModel\BaseModel.py
 '''
 from asyncio.constants import SENDFILE_FALLBACK_READBUFFER_SIZE
 from enum import Enum
@@ -19,7 +19,7 @@ class RequestType(Enum):
 
 class BaseRequest(BaseModel):
     data: Optional[dict] = {}
-    status: Optional[str]
+    status: Optional[RequestType]
     
 
 

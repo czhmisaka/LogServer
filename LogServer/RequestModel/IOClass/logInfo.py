@@ -1,7 +1,7 @@
 '''
 Date: 2022-02-10 10:23:16
 LastEditors: CZH
-LastEditTime: 2022-02-14 08:41:50
+LastEditTime: 2022-02-24 09:11:05
 FilePath: /LogServer/LogServer/RequestModel/IOClass/logInfo.py
 '''
 from json import JSONEncoder
@@ -29,9 +29,11 @@ class nodeInfo(BaseModel):
     mainServerName: Optional[str] = None
     mainServerIP: Optional[str] = None
     mainServerPort: Optional[int] = 0
-    tick:Optional[int] = 1
+    tick: Optional[int] = 1
 
 # 节点traceIdBlock模板
+
+
 class traceIdBlock(BaseModel):
     '''
         'blockSize': '区块大小',
@@ -50,10 +52,13 @@ class traceIdBlock(BaseModel):
 
 # saveLog 行为接收类
 class saveLogReq(BaseModel):
-    nodeInfo: nodeInfo 
+    nodeInfo: nodeInfo
     traceId: Optional[str] = 'not traceId back'
     logType: Optional[str]
     logData: Optional[str] = None
 
 
 
+class logInfo(BaseModel):
+    word:Optional[str] = '一条空日志'
+    logType:Optional[str] = 'info'
